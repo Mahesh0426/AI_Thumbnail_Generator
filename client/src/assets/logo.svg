@@ -1,0 +1,54 @@
+<svg
+  width="300"
+  height="90"
+  viewBox="0 0 300 90"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Gradient -->
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+
+  <!-- T Icon -->
+  <g transform="translate(0, 10)">
+    <path
+      d="M30 0 h40 q10 0 15 5 t5 12 q0 8 -5 14 l-8 8 q-4 5 -10 5 h-12 v25 q0 8 -8 8 h-10 q-8 0 -8-8 V44 H22 q-8 0 -8-8 V25 q0-8 8-8 h18 V0 z"
+      fill="url(#grad)"
+    />
+    <!-- star -->
+    <path
+      d="M83 20 l4 8 9 1 -7 6 2 9 -8-4 -8 4 2-9 -7-6 9-1 4-8z"
+      fill="white"
+      opacity="0.9"
+      transform="scale(0.6) translate(55, -5)"
+    />
+  </g>
+
+  <!-- Text Thumbly -->
+  <text
+    x="110"
+    y="50"
+    font-size="36"
+    font-family="Inter, Arial, sans-serif"
+    font-weight="600"
+    fill="url(#grad)"
+  >
+    Thumbly
+  </text>
+
+  <!-- AI text -->
+  <text
+    x="258"
+    y="50"
+    font-size="40"
+    font-family="Inter, Arial, sans-serif"
+    font-weight="700"
+    fill="#2563EB"
+  >
+    AI
+  </text>
+</svg>
