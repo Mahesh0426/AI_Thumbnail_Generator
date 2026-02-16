@@ -11,7 +11,7 @@ const AspectRatioSelector = ({
   const iconMap = {
     "16:9": <RectangleHorizontal size={24} />,
     "1:1": <Square size={24} />,
-    "9:6": <RectangleVertical size={24} />,
+    "9:16": <RectangleVertical size={24} />,
   } as Record<AspectRatio, React.ReactNode>;
 
   return (
@@ -22,7 +22,7 @@ const AspectRatioSelector = ({
       >
         Aspect Ratio
       </label>
-      <div className="flex flex-wrap gap-28">
+      <div className="flex flex-wrap gap-4">
         {aspectRatios.map((ratio) => {
           const selected = value === ratio;
 

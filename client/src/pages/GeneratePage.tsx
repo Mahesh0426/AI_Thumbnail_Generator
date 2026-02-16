@@ -8,6 +8,7 @@ import {
   type IThumbnail,
   type ThumbnailStyle,
 } from "../assets/assets";
+import StyleSelector from "../components/StyleSelector";
 
 const GeneratePage = () => {
   const { id } = useParams();
@@ -41,57 +42,68 @@ const GeneratePage = () => {
                   <p>Describe your vision and let AI handle the rest.</p>
                 </div>
               </div>
-            </div>
-            {/* right side */}
-            <div className="space-y-5">
-              <div>
-                <label htmlFor="title" className="block text-sm font-medium">
-                  Title or Topic
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  placeholder="eg. EC2 on Amazon Web Services"
-                  onChange={(e) => setTitle(e.target.value)}
-                  maxLength={100}
-                  className="w-full px-4 py-3 rounded-lg border border-white/12 bg-white/8 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-blue-500"
-                />
-                <div className="flex justify-end">
-                  <span className="text-xs text-zinc-400">
-                    {title.length}/100
-                  </span>
+              {/* right side */}
+              <div className="space-y-5">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium">
+                    Title or Topic
+                  </label>
+                  <input
+                    type="text"
+                    value={title}
+                    placeholder="eg. EC2 on Amazon Web Services"
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={100}
+                    className="w-full px-4 py-3 rounded-lg border border-white/12 bg-white/8 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-blue-500"
+                  />
+                  <div className="flex justify-end">
+                    <span className="text-xs text-zinc-400">
+                      {title.length}/100
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              {/* aspectratio selection */}
-              <AspectRatioSelector
-                value={aspectRatio}
-                onChange={setAspectRatio}
-              />
-              {/* style selector */}
-              {/* color theme selector */}
-              {/* details */}
-              <div className="space-y-2">
-                <label htmlFor="details" className="block text-sm font-medium">
-                  Additional Prompts{" "}
-                  <span className="text-xs text-zinc-400">(Optional)</span>
-                </label>
-                <textarea
-                  id="details"
-                  value={additionalDetails}
-                  onChange={(e) => setAdditionalDetails(e.target.value)}
-                  maxLength={500}
-                  placeholder="eg. High quality, 4k, 8k, 3d, cinematic, professional, etc."
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-white/10 bg-white/6 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-blue-500 resize-none"
+                {/* aspectratio selection */}
+                <AspectRatioSelector
+                  value={aspectRatio}
+                  onChange={setAspectRatio}
                 />
-                <div className="flex justify-end">
-                  <span className="text-xs text-zinc-400">
-                    {additionalDetails.length}/500
-                  </span>
+
+                {/* style selector */}
+                <StyleSelector
+                  value={style}
+                  onChange={setStyle}
+                  isOpen={styleDropdownOpen}
+                  setIsOpen={setStyleDropdownOpen}
+                />
+                {/* color theme selector */}
+                {/* details */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="details"
+                    className="block text-sm font-medium"
+                  >
+                    Additional Prompts{" "}
+                    <span className="text-xs text-zinc-400">(Optional)</span>
+                  </label>
+                  <textarea
+                    id="details"
+                    value={additionalDetails}
+                    onChange={(e) => setAdditionalDetails(e.target.value)}
+                    maxLength={500}
+                    placeholder="eg. High quality, 4k, 8k, 3d, cinematic, professional, etc."
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-lg border border-white/10 bg-white/6 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-blue-500 resize-none"
+                  />
+                  <div className="flex justify-end">
+                    <span className="text-xs text-zinc-400">
+                      {additionalDetails.length}/500
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
+
             {/* button */}
             {!id && (
               <button className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-blue-500 to-blue-600 hover:from-blue-700 disabled:cursor-not-allowed transition-colors">
