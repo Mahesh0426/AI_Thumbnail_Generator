@@ -5,7 +5,7 @@ import {
   PenToolIcon,
   SparkleIcon,
 } from "lucide-react";
-import type { ThumbnailStyle } from "../assets/assets";
+import { thumbnailStyles, type ThumbnailStyle } from "../assets/assets";
 
 const StyleSelector = ({
   value,
@@ -25,6 +25,7 @@ const StyleSelector = ({
     Photorealistic:
       "Hyper-realistic, detailed, lifelike, photo-based, natural looking",
     "Tech/Futuristic": "Neon lights, circuit boards, sci-fi, tech inspired",
+    Illustrated: "Hand-drawn, artistic, creative, stylized",
   };
 
   const styleIcons: Record<ThumbnailStyle, React.ReactNode> = {
@@ -33,6 +34,7 @@ const StyleSelector = ({
     Cinematic: <ImageIcon className="h-4 w-4" />,
     Photorealistic: <PenToolIcon className="h-4 w-4" />,
     "Tech/Futuristic": <CpuIcon className="h-4 w-4" />,
+    Illustrated: <PenToolIcon className="h-4 w-4" />,
   };
 
   return (
@@ -62,6 +64,29 @@ const StyleSelector = ({
           ].join(" ")}
         />
       </button>
+      {isOpen && (
+        <div className="absolute bottom-0 z-50 mt-1 w-full rounded-md border border-white/12 backdrop-blur-3xl shadow-lg">
+          {thumbnailStyles.map((style) => (
+            <button
+              key={style}
+              type="button"
+              onClick={() => {
+                onChange(style);
+                setIsOpen(false);
+              }}
+              className="flex w-full items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors text-left"
+            >
+              <div className="text-zinc-400">{styleIcons[style]}</div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-zinc-200">{style}</p>
+                <p className="text-xs text-zinc-500">
+                  {styleDescriptions[style]}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

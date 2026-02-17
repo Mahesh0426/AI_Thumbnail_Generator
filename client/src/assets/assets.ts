@@ -12,6 +12,7 @@ export type AspectRatio = (typeof aspectRatios)[number];
 export const thumbnailStyles = [
   "Bold & Graphic",
   "Minimalist",
+  "Cinematic",
   "Photorealistic",
   "Illustrated",
   "Tech/Futuristic",
@@ -55,6 +56,7 @@ export interface IThumbnail {
     | "Bold & Graphic"
     | "Tech/Futuristic"
     | "Minimalist"
+    | "Cinematic"
     | "Photorealistic"
     | "Illustrated";
   aspect_ratio?: "16:9" | "1:1" | "9:16";
