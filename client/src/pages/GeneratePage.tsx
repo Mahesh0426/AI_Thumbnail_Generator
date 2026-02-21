@@ -9,6 +9,7 @@ import {
   type ThumbnailStyle,
 } from "../assets/assets";
 import StyleSelector from "../components/StyleSelector";
+import ColourSchemeSelector from "../components/ColourSchemeSelector";
 
 const GeneratePage = () => {
   const { id } = useParams();
@@ -76,7 +77,13 @@ const GeneratePage = () => {
                   isOpen={styleDropdownOpen}
                   setIsOpen={setStyleDropdownOpen}
                 />
+
                 {/* color theme selector */}
+                <ColourSchemeSelector
+                  value={colorSchemeId}
+                  onChange={setColorSchemeId}
+                />
+
                 {/* details */}
                 <div className="space-y-2">
                   <label
