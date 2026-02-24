@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SoftBackdrop from "../components/SoftBackdrop";
 import AspectRatioSelector from "../components/AspectRatioSelector";
@@ -10,10 +10,10 @@ import {
 } from "../assets/assets";
 import StyleSelector from "../components/StyleSelector";
 import ColourSchemeSelector from "../components/ColourSchemeSelector";
+import PreviewPanel from "../components/PreviewPanel";
 
 const GeneratePage = () => {
   const { id } = useParams();
-  console.log(id);
 
   const [title, setTitle] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
@@ -27,6 +27,25 @@ const GeneratePage = () => {
   const [style, setStyle] = useState<ThumbnailStyle>("Bold & Graphic");
 
   const [styleDropdownOpen, setStyleDropdownOpen] = useState(false);
+
+  // function that will handle generate
+  const handleGenerate = async () => {
+    setLoading(true);
+  };
+
+  //function to fetch thumbnail
+  const fetchThumbnail = async () => {
+    if (id) {
+      const thumbanil: any = dummy;
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchThumbnail();
+    }
+  }, [id]);
+
   return (
     <>
       <SoftBackdrop />
@@ -112,11 +131,31 @@ const GeneratePage = () => {
             </div>
 
             {/* button */}
-            {!id && (
-              <button className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-blue-500 to-blue-600 hover:from-blue-700 disabled:cursor-not-allowed transition-colors">
+            {id && (
+              <button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="text-[15px] w-full py-3.5 rounded-xl font-medium bg-linear-to-b from-blue-500 to-blue-600 hover:from-blue-700 disabled:cursor-not-allowed transition-colors"
+              >
                 {loading ? "Generating..." : "Generate Thumbnail"}
               </button>
             )}
+            {/* right panel */}
+            <div>
+              <div className="p-6 rounded-2xl bg-white/8 border border-white/10 shadow-xl">
+                <h2 className="text-lg font-semibold text-zinc-100 mb-1">
+                  Preview
+                </h2>
+                <p className="text-sm text-zinc-400">
+                  Your thumbnail will appear here once generated.
+                </p>
+                <PreviewPanel
+                  thumbnail={thumbnail}
+                  isLoading={loading}
+                  aspectRatio={aspectRatio}
+                />
+              </div>
+            </div>
           </div>
         </main>
       </div>

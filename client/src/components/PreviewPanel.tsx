@@ -1,4 +1,4 @@
-import { Loader2Icon } from "lucide-react";
+import { ImageIcon, Loader2Icon } from "lucide-react";
 import { type AspectRatio, type IThumbnail } from "../assets/assets";
 
 const PreviewPanel = ({
@@ -27,6 +27,22 @@ const PreviewPanel = ({
               </p>
               <p className="mt-1 text-xs text-zinc-400">
                 Please wait while we generate your thumbnail.
+              </p>
+            </div>
+          </div>
+        )}
+        {/* empty state */}
+        {!isLoading && !thumbnail?.image_url && (
+          <div className="flex flex-col items-center justify-center gap-4 absolute inset-0 m-2 rounded-lg border-2 border-dashed border-white/20 bg-black/25 ">
+            <div className="max-sm:hidden flex size-20 items-center justify-center rounded-full bg-white/5">
+              <ImageIcon className="size-10 text-white opacity-50" />
+            </div>
+            <div className="px-4 text-center">
+              <p className="text-zinc-400 font-medium text-center">
+                Generate your first thumbnail
+              </p>
+              <p className="text-zinc-400 text-sm">
+                Enter your video title and description to get started
               </p>
             </div>
           </div>
