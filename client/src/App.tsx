@@ -16,6 +16,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/generate" element={<GeneratePage />} />
+        <Route path="/generate/:id" element={<GeneratePage />} />
         <Route path="/my-generation" element={<MyGeneration />} />
       </Routes>
       <Footer />

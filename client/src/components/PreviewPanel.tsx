@@ -31,6 +31,15 @@ const PreviewPanel = ({
             </div>
           </div>
         )}
+        {/* thumbnail image */}
+        {!isLoading && thumbnail?.image_url && (
+          <img
+            src={thumbnail.image_url}
+            alt={thumbnail.title || "Generated Thumbnail"}
+            className="w-full h-full object-cover rounded-xl"
+          />
+        )}
+
         {/* empty state */}
         {!isLoading && !thumbnail?.image_url && (
           <div className="flex flex-col items-center justify-center gap-4 absolute inset-0 m-2 rounded-lg border-2 border-dashed border-white/20 bg-black/25 ">
