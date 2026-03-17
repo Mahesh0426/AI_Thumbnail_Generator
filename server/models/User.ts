@@ -18,8 +18,15 @@ const UserSchema = new mongoose.Schema<IUser>(
       unique: true,
       lowercase: true,
     },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   { timestamps: true },
 );
 
-const User = mongoose.models.User || mongoose.model<Iuser>("User", UserSchema);
+const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+
+export default User;
