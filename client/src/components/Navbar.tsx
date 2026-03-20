@@ -4,10 +4,12 @@ import { motion } from "motion/react";
 import { navlinks } from "../data/navlinks";
 import type { INavLink } from "../types";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn, user, logout } = useAuth();
 
   return (
     <>
@@ -29,49 +31,93 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8 transition duration-500">
-          {navlinks.map((link: INavLink) => (
-            <NavLink
-              key={link.name}
-              to={link.href}
-              className="hover:text-blue-500 transition"
-            >
-              {link.name}
-            </NavLink>
-          ))}
+          {navlinks
+            .filter((link) => !link.requiresAuth || isLoggedIn)
+            .map((link: INavLink) => (
+              <NavLink
+                key={link.name}
+                to={link.href}
+                className="hover:text-blue-500 transition"
+              >
+                {link.name}
+              </NavLink>
+            ))}
         </div>
 
-        <button
-          onClick={() => navigate("/login")}
-          className="hidden md:block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all rounded-full"
-        >
-          Get Started
-        </button>
+        {/* check if user is logged in | desktop */}
+        <div className="hidden md:flex items-center gap-2">
+          {isLoggedIn ? (
+            <div className="relative group">
+              <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
+                {user?.name.charAt(0).toUpperCase()}
+              </button>
+              <div className="absolute hidden group-hover:block top-6 right-0 pt-4">
+                <button
+                  onClick={logout}
+                  className="bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded cursor-pointer hover:bg-white/30 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all rounded-full"
+            >
+              Get Started
+            </button>
+          )}
+        </div>
 
-        {/* for responsive mobile menu */}
+        {/* show button when screen is small */}
         <button onClick={() => setIsOpen(true)} className="md:hidden">
           <MenuIcon size={26} className="active:scale-90 transition" />
         </button>
       </motion.nav>
 
+      {/* for responsive mobile menu */}
       <div
         className={`fixed inset-0 z-100 bg-black/40 backdrop-blur flex flex-col items-center justify-center text-lg gap-8 md:hidden transition-transform duration-400 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        {navlinks.map((link: INavLink) => (
-          <NavLink
-            key={link.name}
-            to={link.href}
-            onClick={() => setIsOpen(false)}
-          >
-            {link.name}
-          </NavLink>
-        ))}
+        {navlinks
+          .filter((link) => !link.requiresAuth || isLoggedIn)
+          .map((link: INavLink) => (
+            <NavLink
+              key={link.name}
+              to={link.href}
+              onClick={() => setIsOpen(false)}
+            >
+              {link.name}
+            </NavLink>
+          ))}
 
-        <button
-          onClick={() => navigate("/login")}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all rounded-full"
-        >
-          Get Started
-        </button>
+        {/* check if user is logged in |  mobile */}
+        <div className="flex items-center gap-2">
+          {isLoggedIn ? (
+            <div className="relative group">
+              <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
+                {user?.name.charAt(0).toUpperCase()}
+              </button>
+              <div className="absolute hidden group-hover:block top-6 right-0 pt-4 text-sm">
+                <button
+                  onClick={logout}
+                  className="bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded cursor-pointer hover:bg-white/30 transition"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all rounded-full"
+            >
+              Get Started
+            </button>
+          )}
+        </div>
+
         <button
           onClick={() => setIsOpen(false)}
           className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-pink-600 hover:bg-pink-700 transition text-white rounded-md flex"

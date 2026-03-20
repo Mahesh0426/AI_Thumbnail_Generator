@@ -5,6 +5,7 @@ export interface NavbarProps {
 export interface INavLink {
   name: string;
   href: string;
+  requiresAuth?: boolean;
 }
 
 export interface IFeature {

@@ -9,6 +9,7 @@ import GeneratePage from "./pages/GeneratePage";
 import MyGeneration from "./pages/MyGeneration";
 import YtPreviewPage from "./pages/YtPreviewPage";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { pathname } = useLocation();
@@ -18,6 +19,7 @@ function App() {
   }, [pathname]);
   return (
     <>
+      <Toaster />
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />

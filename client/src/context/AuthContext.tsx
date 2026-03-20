@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { IUser } from "../assets/assets";
 import api from "../configs/api";
 import toast from "react-hot-toast";
@@ -46,13 +46,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         email,
         password,
       });
+      console.log(data);
+
       if (data.user) {
         setUser(data.user as IUser);
         setIsLoggedIn(true);
       }
       toast.success(data.message);
     } catch (error) {
-      console.log(error);
+      console.log("error on signup", error);
     }
   };
 
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       toast.success(data.message);
     } catch (error) {
-      console.log(error);
+      console.log("error on login", error);
     }
   };
 
@@ -88,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       toast.success(data.message);
     } catch (error) {
-      console.log(error);
+      console.log("error on logout", error);
     }
   };
 
@@ -101,10 +103,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setIsLoggedIn(true);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error to fetch user data", error);
     }
   };
 
+  // fetch user data on initial render
   useEffect(() => {
     (async () => {
       await fetchUser();
@@ -124,4 +127,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthContext;
+// eslint-disable-next-line react-refresh/only-export-components
+export const useAuth = () => useContext(AuthContext);
