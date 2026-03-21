@@ -45,7 +45,6 @@ const thumbnailSchema = new mongoose.Schema<IThumbnail>(
     },
     description: {
       type: String,
-      required: true,
       trim: true,
     },
     style: {

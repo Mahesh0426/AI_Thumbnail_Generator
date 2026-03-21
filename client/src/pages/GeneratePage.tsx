@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SoftBackdrop from "../components/SoftBackdrop";
 import AspectRatioSelector from "../components/AspectRatioSelector";
 import {
   colorSchemes,
-  dummyThumbnails,
   type AspectRatio,
   type IThumbnail,
   type ThumbnailStyle,
@@ -12,9 +11,16 @@ import {
 import StyleSelector from "../components/StyleSelector";
 import ColourSchemeSelector from "../components/ColourSchemeSelector";
 import PreviewPanel from "../components/PreviewPanel";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import api from "../configs/api";
 
 const GeneratePage = () => {
   const { id } = useParams();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const { isLoggedIn } = useAuth();
 
   const [title, setTitle] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
@@ -32,28 +38,82 @@ const GeneratePage = () => {
   // function that will handle generate
   const handleGenerate = async () => {
     setLoading(true);
-  };
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
 
-  const fetchThumbnail = async () => {
-    if (id) {
-      const thumbnail: any = dummyThumbnails.find(
-        (thumbnail) => thumbnail._id === id,
-      );
-      setThumbnail(thumbnail);
-      setAdditionalDetails(thumbnail.user_prompt);
-      setTitle(thumbnail.title);
-      setColorSchemeId(thumbnail.color_scheme);
-      setAspectRatio(thumbnail.aspect_ratio);
-      setStyle(thumbnail.style);
-      setLoading(false);
+    if (!title.trim()) {
+      return toast.error("Please enter a title!");
+    }
+
+    //api call
+    const api_payload = {
+      title,
+      prompt: additionalDetails,
+      style,
+      aspect_ratio: aspectRatio,
+      color_scheme: colorSchemeId,
+      text_overlay: true,
+    };
+
+    const { data } = await api.post("/api/thumbnail/generate", api_payload);
+
+    if (data.success) {
+      navigate(`/generate/${data.thumbnail._id}`);
+      toast.success(data.message);
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      fetchThumbnail();
+  // fetch thumbnail if id is present
+  const fetchThumbnail = useCallback(async () => {
+    try {
+      const { data } = await api.get(`/api/user/thumbnail/${id}`);
+      setThumbnail(data?.thumbnail as IThumbnail);
+      setLoading(!data?.thumbnail?.image_url);
+      setAdditionalDetails(data?.thumbnail?.user_prompt);
+      setTitle(data?.thumbnail?.title);
+      setColorSchemeId(data?.thumbnail?.color_schema);
+      setAspectRatio(data?.thumbnail?.aspect_ratio);
+      setStyle(data?.thumbnail?.style);
+    } catch (error: any) {
+      console.log("error fetching user thumbnail", error);
+
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   }, [id]);
+
+  // initial fetch when arriving via a shared or generated ID
+  useEffect(() => {
+    if (isLoggedIn && id) {
+      const doFetch = async () => {
+        await fetchThumbnail();
+      };
+      doFetch();
+    }
+  }, [isLoggedIn, id, fetchThumbnail]);
+
+  // polling fetch while still loading
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (id && loading && isLoggedIn) {
+      interval = setInterval(() => {
+        fetchThumbnail();
+      }, 5000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [id, loading, isLoggedIn, fetchThumbnail]);
+
+  // if user is on generate page and clicks on generate button again then clear the thumbnail
+  useEffect(() => {
+    if (!id && thumbnail) {
+      // Defer state update to avoid cascading render warning
+      const timeoutId = setTimeout(() => setThumbnail(null), 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [pathname, id, thumbnail]);
 
   return (
     <>
