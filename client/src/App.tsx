@@ -10,6 +10,7 @@ import MyGeneration from "./pages/MyGeneration";
 import YtPreviewPage from "./pages/YtPreviewPage";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import ContactUsPage from "./pages/ContactUsPage";
 
 function App() {
   const { pathname } = useLocation();
@@ -28,6 +29,7 @@ function App() {
         <Route path="/generate/:id" element={<GeneratePage />} />
         <Route path="/my-generation" element={<MyGeneration />} />
         <Route path="/preview" element={<YtPreviewPage />} />
+        <Route path="/contact" element={<ContactUsPage />} />
       </Routes>
       <Footer />
     </>

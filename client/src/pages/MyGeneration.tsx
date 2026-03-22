@@ -1,10 +1,14 @@
 import SoftBackdrop from "../components/SoftBackdrop";
-import { dummyThumbnails, type IThumbnail } from "../assets/assets";
+import { type IThumbnail } from "../assets/assets";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight, Download, TrashIcon } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import api from "../configs/api";
+import toast from "react-hot-toast";
 
 const MyGeneration = () => {
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   const aspectRatioClasseMap: Record<string, string> = {
@@ -16,21 +20,54 @@ const MyGeneration = () => {
   const [thumbnails, setThumbnails] = useState<IThumbnail[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = (id: string) => {
-    console.log(id);
+  const handleDelete = async (id: string) => {
+    try {
+      const confirm = window.confirm(
+        "Are you sure wnat to delete this thumbnail?",
+      );
+      if (!confirm) return;
+
+      const { data } = await api.delete(`/api/user/thumbnails/delete/${id}`);
+      toast.success(data.message);
+      setThumbnails((prev) => prev.filter((thumb) => thumb._id !== id));
+    } catch (error: any) {
+      console.error("Failed to delete thumbnail", error);
+      toast.error(error.response.data.message);
+    }
   };
   const handleDownload = (image_url: string) => {
-    window.open(image_url, "_blank");
+    try {
+      const link = document.createElement("a");
+      link.href = image_url.replace("/upload", "/upload/fl_attachment");
+      link.download = `${"generated-thumbnail"}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Failed to download image", err);
+      toast.error("Failed to download the image. Please try again.");
+    }
   };
 
   const fetchThumbnails = async () => {
-    setThumbnails(dummyThumbnails as unknown as IThumbnail[]);
-    setLoading(false);
+    try {
+      const { data } = await api.get("/api/user/thumbnails");
+      setThumbnails(data.thumbnails || []);
+    } catch (error: any) {
+      console.log("error fetching thumbnails", error);
+      toast.error(
+        error.response?.data?.message || "Failed to fetch thumbnails",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchThumbnails();
-  }, []);
+    if (isLoggedIn) {
+      fetchThumbnails();
+    }
+  }, [isLoggedIn]);
 
   return (
     <>

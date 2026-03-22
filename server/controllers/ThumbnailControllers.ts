@@ -70,6 +70,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     //save to db
     await thumbnail.save();
     res.json({
+      success: true,
       message: "Thumbnail generated successfully",
       thumbnail,
     });
@@ -93,7 +94,7 @@ export const deleteThumbnail = async (req: Request, res: Response) => {
 
     await Thumbnail.findByIdAndDelete({ _id: id, userId });
 
-    res.json({ message: "Thumbnail deleted successfully" });
+    res.json({ success: true, message: "Thumbnail deleted successfully" });
   } catch (error: any) {
     console.log(error);
     return res

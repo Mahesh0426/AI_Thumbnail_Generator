@@ -6,10 +6,11 @@ export const getUsersThumbnails = async (req: Request, res: Response) => {
   try {
     const { userId } = req.session;
 
-    const thumbnail = await Thumbnail.find({ userId }).sort({ createdAt: -1 });
+    const thumbnails = await Thumbnail.find({ userId }).sort({ createdAt: -1 });
     return res.status(200).json({
+      success: true,
       message: "Thumbnails fetched successfully!!!",
-      thumbnail,
+      thumbnails,
     });
   } catch (error: any) {
     console.log(error);

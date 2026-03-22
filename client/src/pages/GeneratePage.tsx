@@ -25,6 +25,9 @@ const GeneratePage = () => {
   const [title, setTitle] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null);
+
+  console.log("thumbnail", thumbnail);
+
   const [loading, setLoading] = useState(false);
 
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
@@ -39,11 +42,13 @@ const GeneratePage = () => {
   const handleGenerate = async () => {
     setLoading(true);
     if (!isLoggedIn) {
+      setLoading(false);
       navigate("/login");
       return;
     }
 
     if (!title.trim()) {
+      setLoading(false);
       return toast.error("Please enter a title!");
     }
 
@@ -57,11 +62,21 @@ const GeneratePage = () => {
       text_overlay: true,
     };
 
-    const { data } = await api.post("/api/thumbnail/generate", api_payload);
+    try {
+      const { data } = await api.post("/api/thumbnail/generate", api_payload);
 
-    if (data.success) {
-      navigate(`/generate/${data.thumbnail._id}`);
-      toast.success(data.message);
+      if (data.success || data.thumbnail) {
+        navigate(`/generate/${data.thumbnail._id}`);
+        toast.success(data.message);
+      } else {
+        setLoading(false);
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.message || "Error generating thumbnail",
+      );
+      setLoading(false);
     }
   };
 
@@ -186,7 +201,7 @@ const GeneratePage = () => {
                     value={additionalDetails}
                     onChange={(e) => setAdditionalDetails(e.target.value)}
                     maxLength={500}
-                    placeholder="eg. High quality, 4k, 8k, 3d, cinematic, professional, etc."
+                    placeholder="Add any extra directions for the thumbnail, such as style, mood, or quality settings."
                     rows={4}
                     className="w-full px-4 py-3 rounded-lg border border-white/10 bg-white/6 text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-blue-500 resize-none"
                   />
@@ -215,7 +230,7 @@ const GeneratePage = () => {
                 <h2 className="text-lg font-semibold text-zinc-100 mb-1">
                   Preview
                 </h2>
-                <p className="text-sm text-zinc-400">
+                <p className="text-sm text-zinc-400 mb-4">
                   Your thumbnail will appear here once generated.
                 </p>
                 <PreviewPanel
