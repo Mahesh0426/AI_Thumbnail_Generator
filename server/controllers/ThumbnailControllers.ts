@@ -9,6 +9,17 @@ import { url } from "inspector/promises";
 export const generateThumbnail = async (req: Request, res: Response) => {
   try {
     const { userId } = req.session;
+
+    // Check if the user has already generated 3 thumbnails
+    const generationCount = await Thumbnail.countDocuments({ userId });
+    if (generationCount >= 3) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Generation limit reached. You can only generate up to 3 thumbnails.",
+      });
+    }
+
     const {
       title,
       prompt: user_prompt,
@@ -17,8 +28,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       color_scheme,
       text_overlay,
     } = req.body;
-
-    console.log("req.body", req.body);
 
     //save to db
     const thumbnail = await Thumbnail.create({
@@ -33,8 +42,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       isGenerating: true,
     });
 
-    console.log("thumbnail", thumbnail);
-
     //generate the image using ai service
     const finalBuffer = await generateImageFromOpenAI({
       title,
@@ -48,8 +55,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     const filename = `thumbnail-${Date.now()}.png`;
     const filePath = path.join("images", filename);
 
-    console.log("filePath", filePath);
-
     //create the images directory if it doesn't exist
     fs.mkdirSync("images", { recursive: true });
 
@@ -60,8 +65,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     const uploadToCloudinary = await cloudinary.uploader.upload(filePath, {
       resource_type: "image",
     });
-
-    console.log("uploadToCloudinary", uploadToCloudinary);
 
     //update the thumbnail with the image url
     thumbnail.image_url = uploadToCloudinary.secure_url || url;
