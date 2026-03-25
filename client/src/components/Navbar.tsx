@@ -5,6 +5,7 @@ import { navlinks } from "../data/navlinks";
 import type { INavLink } from "../types";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo.svg";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Navbar() {
         <Link to="/">
           <img
             className="h-15 w-auto"
-            src="/src/assets/logo.svg"
+            src={logo}
             alt="logo"
             width={130}
             height={34}
