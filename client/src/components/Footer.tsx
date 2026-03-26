@@ -3,6 +3,7 @@ import { LinkedinIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
 import { motion } from "motion/react";
 import type { IFooterLink } from "../types";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.svg";
 
 export default function Footer() {
   return (
@@ -16,7 +17,7 @@ export default function Footer() {
       >
         <img
           className="size-30 aspect-square"
-          src="src/assets/logo.svg"
+          src={logo}
           alt="footer logo"
           width={130}
           height={34}

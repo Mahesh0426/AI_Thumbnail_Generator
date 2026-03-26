@@ -31,6 +31,8 @@ RUN yarn install --production --frozen-lockfile && yarn cache clean
 # Copy compiled javascript from the builder stage
 COPY --from=builder /app/dist ./dist
 
+
+
 # Create an images folder (in case app saves locally)
 RUN mkdir images
 
