@@ -15,8 +15,8 @@ services:
   client:
     build:
       context: ./client
-      args:
-        - VITE_BASE_URL=http://localhost:3000
+      # args:
+      #   - VITE_BASE_URL=http://72.61.125.129:3000
     container_name: thumbnail-client
     ports:
       - "5173:3000"
