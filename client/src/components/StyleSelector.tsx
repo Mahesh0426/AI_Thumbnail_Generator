@@ -65,7 +65,7 @@ const StyleSelector = ({
         />
       </button>
       {isOpen && (
-        <div className="absolute bottom-0 z-50 mt-1 w-full rounded-md border border-white/12 backdrop-blur-3xl shadow-lg">
+        <div className="absolute bottom-full mb-2 z-50 w-full rounded-md border border-white/12 bg-zinc-950 shadow-2xl py-1">
           {thumbnailStyles.map((style) => (
             <button
               key={style}
