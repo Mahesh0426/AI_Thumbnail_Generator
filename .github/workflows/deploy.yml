@@ -13,12 +13,22 @@ jobs:
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.VPS_HOST }} # VPS public IP
           username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-
+          key: ${{ secrets.SSH_KEY }} # private key
           script: |
+            # Fix git safe directory issue
+            git config --global --add safe.directory /home/ubuntu/AI_Thumbnail_Generator
+
             cd /home/ubuntu/AI_Thumbnail_Generator
+
+            echo "Pulling latest code"
             git pull origin main
-            docker compose build
-            docker compose up -d
+
+            echo "Building Docker containers"
+            sudo docker compose build
+
+            echo "Starting containers"
+            sudo docker compose up -d
+
+            echo "Deployment completed successfully"
