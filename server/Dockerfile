@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy dependency definition files
 COPY package.json yarn.lock ./
 
-# Install ALL dependencies (including devDependencies required for the build)
+
 RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application code
